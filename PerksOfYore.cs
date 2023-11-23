@@ -39,8 +39,7 @@ namespace perksofyore
 
         private float currentMetresUp;
         private float summitHeight;
-        private GameObject playerGameobject;
-        private Transform playerTransformStartPosition;
+        private float groundY;
         private Transform playerTransform;
         private void SetupHeight()
         {
@@ -62,24 +61,19 @@ namespace perksofyore
                     summitHeight = 0;
                     return;
                 }
-                playerGameobject = new GameObject("PlayerStartPosition");
-                playerGameobject.transform.position = playerTransform.position;
-                playerTransformStartPosition = playerGameobject.transform;
-                playerTransformStartPosition.position = playerTransform.position;
-                var ground = new Vector3(peakSummit.transform.position.x, playerTransformStartPosition.position.y, peakSummit.transform.position.z);
-                summitHeight = Vector3.Distance(ground, peakSummit.transform.position) + 0.75f /*playerheight*/;
+                groundY = playerTransform.position.y;
+                summitHeight = peakSummit.transform.position.y - groundY + 0.75f;
             }
         }
         private void CalculateHeights()
         {
-            if (!playerTransform || !playerTransformStartPosition)
+            if (!playerTransform)
             {
                 currentMetresUp = 0;
                 summitHeight = 0;
                 return;
             }
-
-            currentMetresUp = Vector3.Distance(new Vector3(playerTransform.position.x, playerTransformStartPosition.position.y, playerTransform.position.z), playerTransform.position);
+            currentMetresUp = playerTransform.position.y - groundY;
         }
         private void DrawHeight()
         {
